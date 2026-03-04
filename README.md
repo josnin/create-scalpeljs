@@ -1,6 +1,6 @@
 # create-jsgood
 
-**The official scaffolding tool for the JSgood Framework.**  
+**The official scaffolding tool for the [JSgood Framework](https://www.npmjs.com/package/jsgood).**  
 Quickly bootstrap a high-performance Web Component project powered by the JSgood ecosystem.
 
 ---
