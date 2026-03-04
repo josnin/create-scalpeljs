@@ -1,0 +1,53 @@
+{
+  "name": "create-jsgood",
+  "version": "0.1.1",
+  "description": "",
+  "bin": {
+    "create-jsgood": "bin/cli.js"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.4",
+    "inquirer": "^13.3.0",
+    "jong-router": "latest",
+    "kleur": "^4.1.5",
+    "pao-form": "latest",
+    "redgin": "latest",
+    "redgin-store": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vite": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josnin/create-jsgood.git"
+  },
+  "keywords": [
+    "jsgood",
+    "create-app",
+    "scaffold",
+    "boilerplate",
+    "web-components",
+    "custom-elements",
+    "redgin",
+    "vite",
+    "typescript",
+    "esm",
+    "frontend-framework",
+    "vanilla-js",
+    "spa-starter",
+    "lightweight-framework"
+  ],
+  "author": "Josnin",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/josnin/create-jsgood/issues"
+  },
+  "homepage": "https://github.com/josnin/create-jsgood#readme"
+}

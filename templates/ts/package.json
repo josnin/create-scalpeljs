@@ -1,0 +1,22 @@
+{
+  "name": "jsgood-app-ts",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "redgin": "latest",
+    "redgin-store": "latest",
+    "jong-router": "latest",
+    "pao-form": "latest"
+  },
+  "devDependencies": {
+    "vite": "latest",
+    "typescript": "^5.0.0"
+  }
+}
+
