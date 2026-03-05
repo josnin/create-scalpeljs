@@ -1,5 +1,5 @@
 {
-  "name": "jsgood-app-ts",
+  "name": "scalpeljs-app-ts",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -9,10 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "redgin": "latest",
-    "redgin-store": "latest",
-    "jong-router": "latest",
-    "pao-form": "latest"
+    "scalpeljs": "latest"
   },
   "devDependencies": {
     "vite": "latest",

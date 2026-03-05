@@ -1,29 +1,27 @@
-# create-jsgood
+# create-scalpeljs
 
-**The official scaffolding tool for the [JSgood Framework](https://www.npmjs.com/package/jsgood).**  
-Quickly bootstrap a high-performance Web Component project powered by the JSgood ecosystem.
+**The official scaffolding tool for the [ScalpelJS Framework](https://www.npmjs.com).**  
+Quickly bootstrap a high-performance Web Component project with a surgical focus on simplicity.
 
 ---
 
 ## What's Inside?
 
-When you generate a project with `create-jsgood`, you get a pre-configured environment featuring:
+When you generate a project with `create-scalpeljs`, you get a clean, zero-bloat boilerplate pre-configured with:
 
-*   **[RedGin](https://www.npmjs.com/package/redgin)**: The surgical Web Component core.
-*   **[RedGin-store](https://www.npmjs.com/package/redgin-store)**: Reactive global state management with LocalStorage persistence.
-*   **[Jong-router](https://www.npmjs.com/package/jong-router)**: Light-speed client-side routing.
-*   **[pao-form](https://www.npmjs.com/package/pao-form)**: Effortless form handling and validation.
-*   **[Vite](https://www.npmjs.com/package/vite)**: Next-generation frontend tooling for instant Hot Module Replacement (HMR).
+*   **[ScalpelJS Core](https://www.npmjs.com/package/scalpeljs)**: The latest version of the framework ready for use.
+*   **[CDN Integration](https://cdn.jsdelivr.net/npm/scalpeljs@latest/dist/scalpeljs.min.js)**: Pre-configured CDN imports for rapid prototyping and deployment.
+*   **Minimalist Structure**: A refined starting point without the overhead of heavy build tools.
 
 ---
 
 ## Quick Start
 
-You don't need to install this package globally. Just run it using `npx`:
+No global installation required. Just run it using `npx`:
 
 ```bash
-npx create-jsgood@latest
-```
+npx create-scalpeljs@latest
+
 
 ## Scaffolding Process:
 1. Project Name: Choose a name for your directory.
@@ -37,7 +35,7 @@ Once your project is created, follow these steps to get running
 
 ```bash
 # 1. Enter the project directory
-cd my-jsgood-app
+cd my-scalpeljs-app
 
 # 2. Install dependencies
 npm install
@@ -50,7 +48,7 @@ Your app will be running at http://localhost:5173.
 
 ## Help
 
-Need help? Open an issue in: [ISSUES](https://github.com/josnin/create-jsgood/issues)
+Need help? Open an issue in: [ISSUES](https://github.com/josnin/create-scalpeljs/issues)
 
 
 ## Contributing

@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 const CURR_DIR = process.cwd();
 
 async function bootstrap() {
-  console.log(kleur.bold().cyan('\n🚀 Welcome to JSgood! Let\'s build something great.\n'));
+  console.log(kleur.bold().cyan('\n🚀 Welcome to ScalpelJS! Let\'s build something great.\n'));
 
   try {
     const answers = await inquirer.prompt([
@@ -19,7 +19,7 @@ async function bootstrap() {
         name: 'projectName',
         type: 'input',
         message: 'Project name:',
-        default: 'my-jsgood-app',
+        default: 'my-scalpeljs-app',
         validate: (input) => {
           if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
           return 'Use only letters, numbers, underscores, and dashes.';

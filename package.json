@@ -1,6 +1,6 @@
 {
-  "name": "create-jsgood",
-  "version": "0.1.2",
+  "name": "create-scalpeljs",
+  "version": "0.1.0",
   "description": "",
   "bin": {
     "create-jsgood": "bin/cli.js"
@@ -13,11 +13,7 @@
   "dependencies": {
     "fs-extra": "^11.3.4",
     "inquirer": "^13.3.0",
-    "jong-router": "latest",
-    "kleur": "^4.1.5",
-    "pao-form": "latest",
-    "redgin": "latest",
-    "redgin-store": "latest"
+    "kleur": "^4.1.5"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
@@ -25,10 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/josnin/create-jsgood.git"
+    "url": "git+https://github.com/josnin/create-scalpeljs.git"
   },
   "keywords": [
-    "jsgood",
+    "scalpeljs",
     "create-app",
     "scaffold",
     "boilerplate",
@@ -47,7 +43,7 @@
   "license": "MIT",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/josnin/create-jsgood/issues"
+    "url": "https://github.com/josnin/create-scalpeljs/issues"
   },
-  "homepage": "https://github.com/josnin/create-jsgood#readme"
+  "homepage": "https://github.com/josnin/create-scalpeljs#readme"
 }

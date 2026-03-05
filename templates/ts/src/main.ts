@@ -1,8 +1,8 @@
-import { RedGin, html } from 'redgin';
+import { RedGin, html } from 'scalpeljs';
 
 class App extends RedGin {
   render(): string {
-    return html`<h1>Welcome to JSgood (TS)</h1>`;
+    return html`<h1>Welcome to ScalpelJS (TS)</h1>`;
   }
 }
 customElements.define('app-root', App);
