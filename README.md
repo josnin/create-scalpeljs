@@ -1,6 +1,6 @@
 # create-scalpeljs
 
-**The official scaffolding tool for the [ScalpelJS Framework](https://www.npmjs.com).**  
+**The official scaffolding tool for the [ScalpelJS Framework](https://www.npmjs.com/package/scalpeljs).**  
 Quickly bootstrap a high-performance Web Component project with a surgical focus on simplicity.
 
 ---
