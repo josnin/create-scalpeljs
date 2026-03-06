@@ -1,6 +1,6 @@
 {
   "name": "create-scalpeljs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "bin": {
     "create-jsgood": "bin/cli.js"
