@@ -3,6 +3,6 @@
 esbuild.config.js
 tsconfig.json
 tslint.json
-index.html
 index.ts
 index.js
+my-scalpeljs-app

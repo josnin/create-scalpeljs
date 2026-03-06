@@ -141,5 +141,5 @@ vite.config.ts.timestamp-*
 
 
 # Test projects created during development
-my-jsgood-app/
+my-scalpeljs-app/
 test-app-*/
