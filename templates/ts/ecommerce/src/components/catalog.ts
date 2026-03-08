@@ -1,189 +1,76 @@
 import { RedGin, html, on, getset, s, css } from "scalpeljs";
 import { store } from "../store";
 
-const componentStyles = css`
-    :host { 
-      display: block; 
-      background: var(--bg);
-      min-height: 100vh; 
-    }
-    
-    .header {
-      text-align: center;
-      padding: 4rem 1rem 2rem;
-    }
-    
-    .header h2 { 
-      font-size: 2.5rem; 
-      font-weight: 700; 
-      margin: 0; 
-      color: var(--text);
-    }
-    
-    .header p { 
-      color: var(--text-muted);
-      margin-top: 0.5rem; 
-    }
-    
-    .cart-count {
-      background: color-mix(in srgb, var(--primary) 15%, transparent);
-      padding: 0.2rem 0.8rem;
-      border-radius: 9999px;
-      color: var(--primary);
-      font-weight: 600;
-      margin-left: 0.5rem;
-      font-size: 1rem;
-    }
+/** 
+ * 1. STATIC CONFIG & STYLES 
+ * Extracted to keep the class logic lightweight.
+ */
+const PRODUCTS = [
+  { id: 1, name: 'Precision Scalpel', price: 45, image: '🔪', category: 'surgical' },
+  { id: 2, name: 'Micro-Fiber Cloth', price: 12, image: '🧼', category: 'accessories' },
+  { id: 3, name: 'Surgical Tweezers', price: 18, image: '✂️', category: 'surgical' },
+  { id: 4, name: 'Tech Repair Kit', price: 89, image: '🛠️', category: 'kits' },
+];
 
-    .grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-      gap: 1.5rem; 
-      padding: 1.5rem; 
-      max-width: 1280px; 
-      margin: 0 auto; 
-    }
+const catalogStyles = css`
+  :host { display: block; background: var(--bg); min-height: 100vh; font-family: system-ui; }
+  
+  .header { text-align: center; padding: 4rem 1rem 2rem; }
+  .header h2 { font-size: 2.5rem; font-weight: 850; letter-spacing: -2px; margin: 0; }
+  
+  .cart-pill {
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    padding: 0.4rem 1rem; border-radius: 100px;
+    color: var(--primary); font-weight: 700; font-size: 0.9rem;
+  }
 
-    .card { 
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      transition: 0.2s;
-      position: relative;
-      
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      }
-      
-      &::before {
-        content: attr(data-category);
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: color-mix(in srgb, var(--primary) 10%, transparent);
-        color: var(--primary);
-        padding: 0.2rem 0.8rem;
-        border-radius: 9999px;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
-      
-      &:hover::before {
-        opacity: 1;
-      }
-    }
+  .grid { 
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 2rem; padding: 2rem; max-width: 1200px; margin: 0 auto; 
+  }
 
-    .img-box { 
-      width: 100%; 
-      aspect-ratio: 1; 
-      background: var(--border);
-      border-radius: 1rem;
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
+  .card { 
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 2.5rem; padding: 1.5rem; transition: 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+  }
 
-    .info { 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+  .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
-    h4 { 
-      margin: 0; 
-      font-size: 1.1rem; 
-      font-weight: 600; 
-      color: var(--text);
-    }
+  .img-box { 
+    width: 100%; aspect-ratio: 1; background: var(--bg-secondary, #f5f5f7);
+    border-radius: 2rem; display: flex; align-items: center; justify-content: center; 
+    font-size: 4rem; margin-bottom: 1.5rem;
+  }
 
-    .price { 
-      color: var(--primary);
-      font-weight: 600;
-      
-      &::before {
-        content: '$';
-        opacity: 0.8;
-        margin-right: 2px;
-      }
-    }
+  .info { display: flex; justify-content: space-between; align-items: flex-end; }
+  h4 { margin: 0; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
+  .price { color: var(--primary); font-weight: 800; font-size: 1.1rem; margin-top: 4px; display: block; }
 
-    .btn-add { 
-      background: var(--primary);
-      color: white;
-      border: none; 
-      width: 40px;
-      height: 40px;
-      border-radius: 9999px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-      
-      &:hover {
-        opacity: 0.9;
-        transform: scale(1.1);
-      }
-      
-      &:active {
-        transform: scale(0.9);
-      }
-    }
+  .btn-add { 
+    background: var(--primary, #000); color: white; border: none; 
+    width: 50px; height: 50px; border-radius: 20px;
+    font-size: 1.5rem; cursor: pointer; transition: 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
 
-    .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--text-muted);
-      grid-column: 1 / -1;
-      
-      span {
-        font-size: 3rem;
-        display: block;
-        margin-bottom: 1rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header {
-        padding: 2rem 1rem;
-      }
-      
-      .header h2 { 
-        font-size: 2rem; 
-      }
-      
-      .grid {
-        gap: 1rem;
-        padding: 1rem;
-      }
-      
-      .card {
-        padding: 1rem;
-      }
-    }
-
-`
+  .btn-add:hover { transform: scale(1.1) rotate(90deg); }
+  .btn-add:active { transform: scale(0.9); }
+`;
 
 export default class Catalog extends RedGin {
+  // 2. REACTIVE STATE
   global = getset(store.state);
   private _unsub?: () => void;
 
-  products = [
-    { id: 1, name: 'Precision Scalpel', price: 45, image: '🔪', category: 'surgical' },
-    { id: 2, name: 'Micro-Fiber Cloth', price: 12, image: '🧼', category: 'accessories' },
-    { id: 3, name: 'Surgical Tweezers', price: 18, image: '✂️', category: 'surgical' },
-    { id: 4, name: 'Tech Repair Kit', price: 89, image: '🛠️', category: 'kits' },
-  ];
+  styles = [catalogStyles];
 
+  // 3. LIFECYCLE
   onInit() {
-    this._unsub = store.subscribe(state => this.global = state);
+    this.setupStore();
+  }
+
+  private setupStore() {
+    this._unsub = store.subscribe(state => (this.global = state));
     store.set('currentRoute', '/'); 
   }
 
@@ -192,46 +79,49 @@ export default class Catalog extends RedGin {
     super.disconnectedCallback(); 
   }
 
-  styles = [componentStyles]
+  // 4. ACTIONS
+  private addToCart(product: any) {
+    store.set('cart', [...this.global.cart, product]);
+    if (navigator.vibrate) navigator.vibrate(10); // Haptic feedback
+  }
 
-  render() {
+  // 5. SUB-TEMPLATES (For cleaner render logic)
+  private renderProduct(p: any) {
     return html`
-      <div class="header">
-        <h2>Curated Tools <span class="cart-count">${s(() => this.global.cart.length)}</span></h2>
-        <p>Precision instruments for the modern craftsman</p>
-      </div>
-
-      <div class="grid">
-        ${this.products.length ? this.products.map(p => html`
-          <div class="card" data-category="${p.category}">
-            <div class="img-box">
-              <span role="img" aria-label="${p.name}">${p.image}</span>
-            </div>
-            <div class="info">
-              <div>
-                <h4>${p.name}</h4>
-                <span class="price">${p.price}</span>
-              </div>
-              <button class="btn-add" 
-                      ${on('click', () => this.addToCart(p))}
-                      aria-label="Add ${p.name} to cart">
-                +
-              </button>
-            </div>
+      <div class="card" data-category="${p.category}">
+        <div class="img-box">
+          <span role="img" aria-label="${p.name}">${p.image}</span>
+        </div>
+        <div class="info">
+          <div class="text-content">
+            <h4>${p.name}</h4>
+            <span class="price">$${p.price}</span>
           </div>
-        `).join('') : html`
-          <div class="empty-state">
-            <span>📦</span>
-            <p>No products available</p>
-          </div>
-        `}
+          <button class="btn-add" ${on('click', () => this.addToCart(p))}>
+            +
+          </button>
+        </div>
       </div>
     `;
   }
 
-  addToCart(product: any) {
-    store.set('cart', [...this.global.cart, product]);
-    if (navigator.vibrate) navigator.vibrate(10);
+  render() {
+    return html`
+      <header class="header">
+        <h2>
+          Curated Tools 
+          <span class="cart-pill">${s(() => this.global.cart.length)} items</span>
+        </h2>
+        <p>Precision instruments for the modern craftsman</p>
+      </header>
+
+      <section class="grid">
+        ${PRODUCTS.length 
+          ? PRODUCTS.map(p => this.renderProduct(p)).join('') 
+          : html`<div class="empty">📦 No products found.</div>`
+        }
+      </section>
+    `;
   }
 }
 
