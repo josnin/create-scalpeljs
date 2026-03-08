@@ -8,4 +8,3 @@ class App extends RedGin {
 customElements.define('app-root', App);
 const appDiv = document.getElementById('app');
 if (appDiv) appDiv.innerHTML = '<app-root></app-root>';
-

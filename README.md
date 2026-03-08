@@ -24,10 +24,16 @@ npx create-scalpeljs@latest
 
 
 ## Scaffolding Process:
-1. Project Name: Choose a name for your directory.
-2. Select Flavor [js/ts]:
-* js: Standard JavaScript (ESM) with Vite.
-* ts: Professional TypeScript setup with Type-checking.
+The CLI will guide you through a three-step precision setup:
+1. Project Name: Define your workspace directory.
+2. Select Flavor:
+js: Standard JavaScript (ESM) + Vite. Lightweight and fast.
+ts: Professional TypeScript + Type-checking. Built for scale.
+
+3. Select Template:
+Blank: A clean slate for custom surgical builds.
+Ecommerce: A full-stack sample (Catalog, Cart, Checkout) using the Scalpel Ecosystem.
+
 
 ## Development Workflow
 

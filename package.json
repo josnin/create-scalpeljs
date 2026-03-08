@@ -1,6 +1,6 @@
 {
   "name": "create-scalpeljs",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "",
   "bin": {
     "create-jsgood": "bin/cli.js"
@@ -11,9 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@inquirer/prompts": "^8.3.0",
     "fs-extra": "^11.3.4",
     "inquirer": "^13.3.0",
-    "kleur": "^4.1.5"
+    "kleur": "^4.1.5",
+    "scalpeljs": "^0.1.6"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
