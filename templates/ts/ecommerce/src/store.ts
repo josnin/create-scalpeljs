@@ -2,6 +2,7 @@ import { Store } from "scalpeljs";
 
 const initialState = { 
     cart: [],
+    currentRoute: '/',
     user: { name: 'Guest'   }
 };
 

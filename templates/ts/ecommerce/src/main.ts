@@ -19,9 +19,10 @@ class App extends RedGin {
     const router = new JongRouter([
       { pattern: '/', component: import('./components/catalog') },
       { pattern: '/checkout', component: import('./components/checkout') }
-    ], this.shadowRoot!.getElementById('outlet')!);
+    ], this.shadowRoot!.getElementById('outlet')!, this.shadowRoot!);
 
     router.init();
+
   }
 
   render() {

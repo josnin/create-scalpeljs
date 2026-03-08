@@ -18,7 +18,7 @@ async function bootstrap() {
     // 1. Project Name
     const projectName = await input({
       message: 'Project name:',
-      default: 'my-scalpel-app',
+      default: 'my-scalpeljs-app',
       validate: (val) => /^([A-Za-z\-\\_\d])+$/.test(val) || 'Invalid characters.'
     });
 

@@ -1,12 +1,7 @@
 // src/components/welcome-message.ts
-import { RedGin, css, html } from "scalpeljs";
+import { RedGin, html } from "scalpeljs";
 
 export default class WelcomeMessage extends RedGin {
-  styles = [css`
-    :host {
-      display: block;
-    }
-  `]
 
   render() {
     return html`

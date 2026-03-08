@@ -1,11 +1,7 @@
-import { css, RedGin, s, getset, html } from "scalpeljs";
+import { attr, css, RedGin, s, getset, html } from "scalpeljs";
 import { store } from "../store";
 
-export default class Navbar extends RedGin {
-  global = getset(store.state);
-  private _unsub?: () => void;
-
-  styles = [css`
+const componentStyles = css`
     :host { 
       display: block; 
       position: sticky; 
@@ -115,7 +111,14 @@ export default class Navbar extends RedGin {
         padding: 0.5rem;
       }
     }
-  `]
+
+  `;
+
+export default class Navbar extends RedGin {
+  global = getset(store.state);
+  private _unsub?: () => void;
+
+  styles = [componentStyles]
 
   private handleScroll = () => {
     const nav = this.shadowRoot?.querySelector('nav');
@@ -142,14 +145,23 @@ export default class Navbar extends RedGin {
   render() {
     return html`
       <nav>
-        <a router-link href="/" class="logo">ScalpelJS Shop</a>
+        <a router-link href="/" class="logo" router-link>ScalpelJS Shop</a>
         
         <div class="nav-links">
-          <a router-link href="/" class="nav-link ${window.location.pathname === '/' ? 'active' : ''}">
+          <a 
+            router-link 
+            href="/" 
+            ${attr('class', () => `nav-link${this.global.currentRoute === '/' ? ' active' : ''}`)}
+          >
             <span>Shop</span>
           </a>
           
-          <a router-link href="/checkout" class="nav-link ${window.location.pathname === '/checkout' ? 'active' : ''}">
+          
+          <a 
+            router-link 
+            href="/checkout" 
+            ${attr('class', () => `nav-link${this.global.currentRoute === '/checkout' ? ' active' : ''}`)}
+          >
             <span>Orders</span>
           </a>
           

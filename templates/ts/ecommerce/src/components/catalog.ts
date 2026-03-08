@@ -1,27 +1,7 @@
 import { RedGin, html, on, getset, s, css } from "scalpeljs";
 import { store } from "../store";
 
-export default class Catalog extends RedGin {
-  global = getset(store.state);
-  private _unsub?: () => void;
-
-  products = [
-    { id: 1, name: 'Precision Scalpel', price: 45, image: '🔪', category: 'surgical' },
-    { id: 2, name: 'Micro-Fiber Cloth', price: 12, image: '🧼', category: 'accessories' },
-    { id: 3, name: 'Surgical Tweezers', price: 18, image: '✂️', category: 'surgical' },
-    { id: 4, name: 'Tech Repair Kit', price: 89, image: '🛠️', category: 'kits' },
-  ];
-
-  onInit() {
-    this._unsub = store.subscribe(state => this.global = state);
-  }
-
-  disconnectedCallback() { 
-    this._unsub?.(); 
-    super.disconnectedCallback(); 
-  }
-
-  styles = [css`
+const componentStyles = css`
     :host { 
       display: block; 
       background: var(--bg);
@@ -188,7 +168,31 @@ export default class Catalog extends RedGin {
         padding: 1rem;
       }
     }
-  `]
+
+`
+
+export default class Catalog extends RedGin {
+  global = getset(store.state);
+  private _unsub?: () => void;
+
+  products = [
+    { id: 1, name: 'Precision Scalpel', price: 45, image: '🔪', category: 'surgical' },
+    { id: 2, name: 'Micro-Fiber Cloth', price: 12, image: '🧼', category: 'accessories' },
+    { id: 3, name: 'Surgical Tweezers', price: 18, image: '✂️', category: 'surgical' },
+    { id: 4, name: 'Tech Repair Kit', price: 89, image: '🛠️', category: 'kits' },
+  ];
+
+  onInit() {
+    this._unsub = store.subscribe(state => this.global = state);
+    store.set('currentRoute', '/'); 
+  }
+
+  disconnectedCallback() { 
+    this._unsub?.(); 
+    super.disconnectedCallback(); 
+  }
+
+  styles = [componentStyles]
 
   render() {
     return html`

@@ -1,42 +1,7 @@
 import { propReflect, RedGin, html, on, getset, s, FormBuilder, css } from "scalpeljs";
 import { store } from "../store";
 
-export default class Checkout extends RedGin {
-  global = getset(store.state);
-  isValid = propReflect<boolean>(false);
-  static observedAttributes = ['is-valid'];
-  private _unsub?: () => void;
-  fb!: FormBuilder;
-  orderForm!: ReturnType<FormBuilder['group']>;
-
-  onInit() {
-    this._unsub = store.subscribe(state => this.global = state);
-    this.fb = new FormBuilder(this.shadowRoot!);
-
-    const Validators = {
-      required: {
-        validator: (value: any) => !!value && value.trim().length > 0,
-        errorMessage: 'Identification required.',
-      },
-      email: {
-        validator: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-        errorMessage: 'Enter a valid digital address.',
-      }
-    };
-
-    this.orderForm = this.fb.group({
-      email: this.fb.control('', [Validators.required, Validators.email])
-    });
-
-    this.orderForm.subscribe(() => {
-      this.orderForm.validateAll();
-      this.isValid = this.orderForm.valid;
-    });
-  }
-
-  disconnectedCallback() { this._unsub?.(); super.disconnectedCallback(); }
-
-  styles = [css`
+const componentStyles = css`
     :host { 
       display: flex; 
       justify-content: center; 
@@ -143,7 +108,47 @@ export default class Checkout extends RedGin {
       opacity: 0.5; 
       cursor: not-allowed; 
     }
-  `]
+
+`;
+
+export default class Checkout extends RedGin {
+  global = getset(store.state);
+  isValid = propReflect<boolean>(false);
+  static observedAttributes = ['is-valid'];
+  private _unsub?: () => void;
+  fb!: FormBuilder;
+  orderForm!: ReturnType<FormBuilder['group']>;
+
+  onInit() {
+    this._unsub = store.subscribe(state => this.global = state);
+    store.set('currentRoute', '/checkout'); 
+
+    this.fb = new FormBuilder(this.shadowRoot!);
+
+    const Validators = {
+      required: {
+        validator: (value: any) => !!value && value.trim().length > 0,
+        errorMessage: 'Identification required.',
+      },
+      email: {
+        validator: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        errorMessage: 'Enter a valid digital address.',
+      }
+    };
+
+    this.orderForm = this.fb.group({
+      email: this.fb.control('', [Validators.required, Validators.email])
+    });
+
+    this.orderForm.subscribe(() => {
+      this.orderForm.validateAll();
+      this.isValid = this.orderForm.valid;
+    });
+  }
+
+  disconnectedCallback() { this._unsub?.(); super.disconnectedCallback(); }
+
+  styles = [componentStyles]
 
   render() {
     const total = this.global.cart.reduce((sum: number, p: { price: number }) => sum + p.price, 0);
