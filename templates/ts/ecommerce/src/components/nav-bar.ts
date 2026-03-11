@@ -145,12 +145,12 @@ export default class Navbar extends RedGin {
   render() {
     return html`
       <nav>
-        <a router-link href="/" class="logo" router-link>ScalpelJS Shop</a>
+        <a router-link href="/" class="logo">ScalpelJS Shop</a>
         
         <div class="nav-links">
           <a 
             router-link 
-            href="/" 
+            href="/catalog" 
             ${attr('class', () => `nav-link${this.global.currentRoute === '/' ? ' active' : ''}`)}
           >
             <span>Shop</span>

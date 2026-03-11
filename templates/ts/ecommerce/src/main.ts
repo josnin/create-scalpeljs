@@ -17,9 +17,10 @@ class App extends RedGin {
   onInit() {
     console.log('App initialized');
     const router = new JongRouter([
-      { pattern: '/', component: import('./components/catalog') },
-      { pattern: '/checkout', component: import('./components/checkout') }
-    ], this.shadowRoot!.getElementById('outlet')!, this.shadowRoot!);
+      { pattern: '/catalog', component: import('./components/catalog') },
+      { pattern: '/checkout', component: import('./components/checkout') },
+      { pattern: '/', component: import('./components/catalog') }, // move at last as it matches all routes
+    ], this.shadowRoot!.getElementById('outlet')!, '', true);
 
     router.init();
 

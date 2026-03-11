@@ -1,7 +1,7 @@
 {
   "name": "create-scalpeljs",
-  "version": "0.1.5",
-  "description": "",
+  "version": "0.1.6",
+  "description": "The official scaffolding tool for the ScalpelJS Framework. Quickly bootstrap a high-performance Web Component project with a surgical focus on speed, modularity, and developer experience.",
   "bin": {
     "create-jsgood": "bin/cli.js"
   },
@@ -15,7 +15,7 @@
     "fs-extra": "^11.3.4",
     "inquirer": "^13.3.0",
     "kleur": "^4.1.5",
-    "scalpeljs": "^0.1.6"
+    "scalpeljs": "latest"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
