@@ -6,6 +6,7 @@ import path from 'path';
 import os from 'os';
 import kleur from 'kleur';
 import degit from 'degit';
+import { execSync } from 'child_process';
 
 const CURR_DIR = process.cwd();
 const GITHUB_REPO = 'josnin/create-scalpeljs';
@@ -19,17 +20,14 @@ async function fetchTemplateChoices(language) {
     
     await emitter.clone(tmpPath);
 
-    // Read the folder names
     const items = await fs.readdir(tmpPath);
     
     const choices = items
       .filter(item => {
-        // Only include actual directories
         const fullPath = path.join(tmpPath, item);
         return fs.lstatSync(fullPath).isDirectory();
       })
       .map(item => ({
-        // FIXED: Correctly capitalize the folder name string
         name: `${kleur.yellow('📦 ' + item.charAt(0).toUpperCase() + item.slice(1))}`,
         value: item
       }));
@@ -41,14 +39,9 @@ async function fetchTemplateChoices(language) {
     return choices;
   } catch (error) {
     if (fs.existsSync(tmpPath)) await fs.remove(tmpPath);
-    // Fallback if the network or folder structure fails
-    return [
-      { name: kleur.yellow('📦 Blank'), value: 'blank' }
-    ];
+    return null; 
   }
 }
-
-
 
 async function bootstrap() {
   console.log(kleur.bold().cyan('\n🔪 ScalpelJS - Precision Web App Framework\n'));
@@ -58,6 +51,11 @@ async function bootstrap() {
       message: 'Project folder name:',
       default: 'my-scalpeljs-app'
     });
+
+    const targetPath = path.join(CURR_DIR, projectName);
+    if (fs.existsSync(targetPath)) {
+      throw new Error(`Folder "${projectName}" already exists.`);
+    }
 
     const templateType = await select({
       message: 'Select language:',
@@ -70,30 +68,34 @@ async function bootstrap() {
     console.log(kleur.dim('📡 Syncing templates from GitHub...'));
     const dynamicChoices = await fetchTemplateChoices(templateType);
 
-    const templateFlavor = await select({
-      message: 'Select a template:',
-      choices: dynamicChoices
-    });
-
-    const targetPath = path.join(CURR_DIR, projectName);
-    if (fs.existsSync(targetPath)) {
-      throw new Error(`Folder "${projectName}" already exists.`);
+    let templateFlavor;
+    if (dynamicChoices) {
+      templateFlavor = await select({
+        message: 'Select a template:',
+        choices: dynamicChoices
+      });
+    } else {
+      console.log(kleur.yellow('⚠️  Could not sync templates. Switching to manual entry.'));
+      templateFlavor = await input({
+        message: 'Enter template name (e.g., "blank", "ecommerce"):',
+        validate: (val) => val.length > 0 || 'Name is required'
+      });
     }
 
-    // --- Final Scaffolding ---
     const remotePath = `${GITHUB_REPO}/templates/${templateType}/${templateFlavor}`;
     console.log(kleur.gray(`\n⚡ Copying ${templateFlavor} to ./${projectName}...`));
 
     const finalEmitter = degit(remotePath, { cache: false, force: true });
     await finalEmitter.clone(targetPath);
 
-    console.log(kleur.bold().green(`\n✅ Done! Project ready in ./${projectName}`));
+    console.log(kleur.bold().green(`\n✅ Project ready in ./${projectName}`));
 
-    console.log(kleur.bold('\n👉 Next steps:'));
-    console.log(kleur.cyan(`  cd ${projectName}`));
-    console.log(kleur.cyan('  npm install'));
-    console.log(kleur.cyan('  npm run dev\n'));
+    // --- Automatic Execution ---
+    console.log(kleur.cyan('\n📦 Installing dependencies via npm...'));
+    execSync('npm install', { cwd: targetPath, stdio: 'inherit' });
 
+    console.log(kleur.bold().yellow('\n🚀 Launching ScalpelJS dev server...\n'));
+    execSync('npm run dev', { cwd: targetPath, stdio: 'inherit' });
 
   } catch (error) {
     if (error.name === 'ExitPromptError') {
