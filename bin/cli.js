@@ -1,88 +1,99 @@
 #!/usr/bin/env node
 
-import { input, select } from '@inquirer/prompts'; // Modern, more stable API
+import { input, select } from '@inquirer/prompts';
 import fs from 'fs-extra';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import os from 'os';
 import kleur from 'kleur';
+import degit from 'degit';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const CURR_DIR = process.cwd();
+const GITHUB_REPO = 'josnin/create-scalpeljs';
+
+async function fetchTemplateChoices(language) {
+  const tmpPath = path.join(os.tmpdir(), `scalpel-peek-${Date.now()}`);
+  
+  try {
+    const remoteSource = `${GITHUB_REPO}/templates/${language}`;
+    const emitter = degit(remoteSource, { cache: false, force: true });
+    
+    await emitter.clone(tmpPath);
+
+    // Read the folder names
+    const items = await fs.readdir(tmpPath);
+    
+    const choices = items
+      .filter(item => {
+        // Only include actual directories
+        const fullPath = path.join(tmpPath, item);
+        return fs.lstatSync(fullPath).isDirectory();
+      })
+      .map(item => ({
+        // FIXED: Correctly capitalize the folder name string
+        name: `${kleur.yellow('📦 ' + item.charAt(0).toUpperCase() + item.slice(1))}`,
+        value: item
+      }));
+
+    await fs.remove(tmpPath);
+    
+    if (choices.length === 0) throw new Error("No templates found");
+    
+    return choices;
+  } catch (error) {
+    if (fs.existsSync(tmpPath)) await fs.remove(tmpPath);
+    // Fallback if the network or folder structure fails
+    return [
+      { name: kleur.yellow('📦 Blank'), value: 'blank' }
+    ];
+  }
+}
+
+
 
 async function bootstrap() {
-  console.log(kleur.bold().cyan('\n🔪 ScalpelJS - Precision Web App Framework'));
-  console.log(kleur.dim('-------------------------------------------\n'));
+  console.log(kleur.bold().cyan('\n🔪 ScalpelJS - Precision Web App Framework\n'));
 
   try {
-    // 1. Project Name
     const projectName = await input({
-      message: 'Project name:',
-      default: 'my-scalpeljs-app',
-      validate: (val) => /^([A-Za-z\-\\_\d])+$/.test(val) || 'Invalid characters.'
+      message: 'Project folder name:',
+      default: 'my-scalpeljs-app'
     });
 
-    // 2. Language Selection (More Transparent)
     const templateType = await select({
-      message: 'Select your language flavor:',
+      message: 'Select language:',
       choices: [
-        { 
-          name: kleur.blue('📘 TypeScript') + kleur.gray(' - Full type safety (Recommended)'), 
-          value: 'ts' 
-        },
-        { 
-          name: kleur.green('📗 JavaScript') + kleur.gray(' - Plain ESM development'), 
-          value: 'js' 
-        }
+        { name: 'TypeScript', value: 'ts' },
+        { name: 'JavaScript', value: 'js' }
       ]
     });
 
-    // 3. Template Selection
+    console.log(kleur.dim('📡 Syncing templates from GitHub...'));
+    const dynamicChoices = await fetchTemplateChoices(templateType);
+
     const templateFlavor = await select({
-      message: 'Select a starter template:',
-      choices: [
-        { 
-          name: kleur.yellow('🛍️  Ecommerce Shop') + kleur.gray(' - Store, Cart, Checkout sample'), 
-          value: 'ecommerce' 
-        },
-        { 
-          name: kleur.white('📄 Blank Starter') + kleur.gray(' - Minimal ScalpelJS setup'), 
-          value: 'blank' 
-        }
-      ]
+      message: 'Select a template:',
+      choices: dynamicChoices
     });
 
-    // --- Scaffolding Logic ---
-    const templatePath = path.resolve(__dirname, '../templates', templateType, templateFlavor);
     const targetPath = path.join(CURR_DIR, projectName);
-
-    if (!fs.existsSync(templatePath)) {
-      throw new Error(`Template not found: ${templateType}/${templateFlavor}`);
-    }
-
     if (fs.existsSync(targetPath)) {
       throw new Error(`Folder "${projectName}" already exists.`);
     }
 
-    console.log(kleur.gray(`\n⚡ Scaffolding ${kleur.white(templateType)} ${templateFlavor}...`));
+    // --- Final Scaffolding ---
+    const remotePath = `${GITHUB_REPO}/templates/${templateType}/${templateFlavor}`;
+    console.log(kleur.gray(`\n⚡ Copying ${templateFlavor} to ./${projectName}...`));
 
-    await fs.copy(templatePath, targetPath);
+    const finalEmitter = degit(remotePath, { cache: false, force: true });
+    await finalEmitter.clone(targetPath);
 
-    // Update package.json
-    const pkgJsonPath = path.join(targetPath, 'package.json');
-    if (fs.existsSync(pkgJsonPath)) {
-      const pkgJson = await fs.readJson(pkgJsonPath);
-      pkgJson.name = projectName;
-      await fs.writeJson(pkgJsonPath, pkgJson, { spaces: 2 });
-    }
+    console.log(kleur.bold().green(`\n✅ Done! Project ready in ./${projectName}`));
 
-    // --- Success Output ---
-    console.log(kleur.bold().green(`\n✅ Created ${projectName} successfully!`));
-    
-    console.log(kleur.bold('\n🚀 Quick Start:'));
+    console.log(kleur.bold('\n👉 Next steps:'));
     console.log(kleur.cyan(`  cd ${projectName}`));
     console.log(kleur.cyan('  npm install'));
     console.log(kleur.cyan('  npm run dev\n'));
+
 
   } catch (error) {
     if (error.name === 'ExitPromptError') {

@@ -20,7 +20,7 @@ class App extends RedGin {
       { pattern: '/catalog', component: import('./components/catalog') },
       { pattern: '/checkout', component: import('./components/checkout') },
       { pattern: '/', component: import('./components/catalog') }, // move at last as it matches all routes
-    ], this.shadowRoot!.getElementById('outlet')!, '', true);
+    ], this.shadowRoot!.getElementById('outlet')!);
 
     router.init();
 
