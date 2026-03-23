@@ -55,5 +55,10 @@ export const actions = {
   addNotification: (msg: string) => {
     const notif = { id: Date.now().toString(), msg, read: false, time: new Date() };
     store.set('notifications', [notif, ...(store.state.notifications || [])]);
+  },
+  toggleSidebar: () => {
+    store.set('ui', { ...store.state.ui, sidebarOpen: !store.state.ui.sidebarOpen });
   }
+
+  
 };

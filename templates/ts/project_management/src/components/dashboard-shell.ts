@@ -1,5 +1,5 @@
-import { RedGin, html, getset, s, on, css } from "scalpeljs";
-import { store } from "../store";
+import { s, RedGin, html, getset, attr, on, css } from "scalpeljs";
+import { store, actions } from "../store";
 
 const styles = css`
   :host { display: flex; min-height: 100vh; }
@@ -60,7 +60,10 @@ export default class DashboardShell extends RedGin {
   styles = [styles];
   
   onInit() {
-    this.unsub = store.subscribe(state => (this.global = state));
+    this.unsub = store.subscribe(state => {
+      this.global = state;
+      console.log('State updated:', state);
+    });
   }
   
   disconnectedCallback() {
@@ -69,7 +72,8 @@ export default class DashboardShell extends RedGin {
   }
   
   toggleSidebar() {
-    store.set('ui.sidebarOpen', !this.global.ui.sidebarOpen);
+    actions.toggleSidebar();
+    //store.set('ui.sidebarOpen', !this.global.ui.sidebarOpen);
   }
   
   render() {
@@ -81,7 +85,10 @@ export default class DashboardShell extends RedGin {
     ];
     
     return html`
-      <aside class="sidebar ${this.global.ui.sidebarOpen ? 'open' : ''}">
+      ${s(() => console.log(this.global.ui.sidebarOpen))}
+      <aside class="sidebar 
+          ${attr('open', () => this.global.ui.sidebarOpen)}"
+          >
         <div class="logo">📊 PM Flow</div>
         <nav>
           ${nav.map(item => html`
