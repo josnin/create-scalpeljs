@@ -1,6 +1,5 @@
-import { RedGin, html, on, getset, s, css, attr } from "scalpeljs";
+import { RedGin, html, on, getset, s, css } from "scalpeljs";
 import { store } from "../store";
-import { theme } from "../theme.css";
 
 const playLocalStyles = css`
   .msg { padding: 1rem 1.25rem; border-radius: 20px; max-width: 80%; line-height: 1.5; font-size: 0.95rem; }
@@ -18,7 +17,7 @@ export default class Playground extends RedGin {
   isProcessing = getset<boolean>(false);
   private _unsub?: () => void;
 
-  styles = [theme, playLocalStyles];
+  styles = [playLocalStyles];
 
   onInit() {
     this._unsub = store.subscribe(state => {
