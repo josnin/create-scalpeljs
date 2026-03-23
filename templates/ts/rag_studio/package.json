@@ -1,0 +1,19 @@
+{
+  "name": "my-scalpeljs-rag-studio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "scalpeljs": "latest"
+  },
+  "devDependencies": {
+    "vite": "latest",
+    "typescript": "^5.0.0"
+  }
+}
+
