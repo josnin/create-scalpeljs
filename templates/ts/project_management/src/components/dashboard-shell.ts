@@ -85,10 +85,9 @@ export default class DashboardShell extends RedGin {
     ];
     
     return html`
-      ${s(() => console.log(this.global.ui.sidebarOpen))}
-      <aside class="sidebar 
-          ${attr('open', () => this.global.ui.sidebarOpen)}"
-          >
+      <aside ${attr('class', () =>
+        this.global.ui.sidebarOpen ? `sidebar open` : `sidebar`
+      )}>
         <div class="logo">📊 PM Flow</div>
         <nav>
           ${nav.map(item => html`
