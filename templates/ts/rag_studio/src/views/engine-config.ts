@@ -48,6 +48,9 @@ export default class EngineConfig extends RedGin {
   }
 
   render() {
+    // Get official view of config via Selector
+    const config = selectors.getConfig();
+
     return html`
       <div class="card">
         <h2 style="font-size: 2.2rem; font-weight: 850; letter-spacing: -1.5px; margin: 0 0 2rem;">Engine Config.</h2>
@@ -56,7 +59,8 @@ export default class EngineConfig extends RedGin {
           <label for="apiKey">OpenAI API Key</label>
           <input 
             type="password" id="apiKey" class="input-standard" 
-            value="${this.global.config.apiKey}"
+            placeholder="sk-..."
+            value="${config.apiKey}"
             ${on('input', (e: any) => this.configForm.setValue({ "apiKey": e.target.value }))}
           >
         </div>
@@ -67,8 +71,8 @@ export default class EngineConfig extends RedGin {
             id="model" class="input-standard"
             ${on('change', (e: any) => this.configForm.setValue({ "model": e.target.value }))}
           >
-            <option value="gpt-4o" ?selected="${this.global.config.model === 'gpt-4o'}">GPT-4o</option>
-            <option value="claude-3-5-sonnet" ?selected="${this.global.config.model === 'claude-3-5-sonnet'}">Claude 3.5 Sonnet</option>
+            <option value="gpt-4o" selected="${config.model === 'gpt-4o'}">GPT-4o</option>
+            <option value="claude-3-5-sonnet" selected="${config.model === 'claude-3-5-sonnet'}">Claude 3.5 Sonnet</option>
           </select>
         </div>
 
@@ -80,12 +84,14 @@ export default class EngineConfig extends RedGin {
             ${on('click', this.handleSave)}
           >
             ${this.isSaving 
-              ? html`<div class="spinner spinner-white"></div> <span>Syncing...</span>` 
+              ? html`<div class="spinner"></div> <span>Syncing...</span>` 
               : 'Save Configuration'}
           </button>
         `)}
       </div>
     `;
   }
+
+
 }
 customElements.define('app-config', EngineConfig);

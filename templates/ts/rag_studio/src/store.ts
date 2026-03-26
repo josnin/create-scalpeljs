@@ -15,25 +15,30 @@ const initialState: AppState = {
 
 export const store = new Store(initialState, { storageKey: 'rag_studio_v1' });
 
+// Pure logic selectors (No parameters needed)
 export const selectors = {
-  hasHistory: () => store.state.messages.length > 0
+  getMessages: () => store.state.messages,
+  getSources: () => store.state.activeSources,
+  getConfig: () => store.state.config,
+  hasHistory: () => store.state.messages.length > 0,
 };
+
 
 export const actions = {
   async saveConfig(updates: Partial<AppState['config']>) {
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 600));
     store.set('config', { ...store.state.config, ...updates });
   },
 
   async postMessage(prompt: string) {
-    // 1. User message
+    // 1. Add User Message
     store.set('messages', [...store.state.messages, { role: 'user', content: prompt }]);
 
-    // 2. Simulated delay for RAG
+    // 2. RAG Delay
     await new Promise(r => setTimeout(r, 800));
-    store.set('activeSources', [{ title: 'rag_data.json', snippet: 'Matched knowledge base...' }]);
+    store.set('activeSources', [{ title: 'rag_data.json', snippet: 'Context found...' }]);
 
-    // 3. AI Stream Start
+    // 3. AI Typing Effect
     const response = "Analyzing context... Access granted. Based on your RAG data, I have optimized the inference for your specific model.";
     const aiIdx = store.state.messages.length;
     store.set('messages', [...store.state.messages, { role: 'ai', content: '' }]);
@@ -44,9 +49,12 @@ export const actions = {
       const msgs = [...store.state.messages];
       msgs[aiIdx] = { role: 'ai', content: current };
       store.set('messages', msgs);
-      await new Promise(r => setTimeout(r, 20 + Math.random() * 25));
+      await new Promise(r => setTimeout(r, 20 + Math.random() * 20));
     }
   },
 
-  clearSession: () => store.set('messages', []) || store.set('activeSources', [])
+  clearSession: () => {
+    store.set('messages', []);
+    store.set('activeSources', []);
+  }
 };
