@@ -1,5 +1,5 @@
-import { attr, propReflect, RedGin, html, on, getset, s, FormBuilder } from "scalpeljs";
-import { store } from "../store";
+import { RedGin, html, on, getset, s, FormBuilder, propReflect } from "scalpeljs";
+import { store, actions, selectors } from "../store";
 
 const VALIDATORS = {
   required: { validator: (v: any) => !!v?.toString().trim(), errorMessage: 'Required.' },
@@ -17,10 +17,8 @@ export default class EngineConfig extends RedGin {
   private fb!: FormBuilder;
   private configForm!: ReturnType<FormBuilder['group']>;
 
-//  styles = [theme]; // Using the shared theme
-
   onInit() {
-    this._unsub = store.subscribe(state => (this.global = state));
+    this._unsub = store.subscribe(state => (this.global = { ...state }));
     this.setupForm();
   }
 
@@ -37,21 +35,16 @@ export default class EngineConfig extends RedGin {
     });
   }
 
-  disconnectedCallback() {
-    this._unsub?.();
-    super.disconnectedCallback();
-  }
+  disconnectedCallback() { this._unsub?.(); super.disconnectedCallback(); }
 
-  async handleSave() {
+  handleSave = async () => {
     this.isSaving = true;
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    store.set('config', { 
-      ...this.global.config, 
-      ...this.configForm.getValue() 
-    });
-    
-    this.isSaving = false;
+
+    try {
+      await actions.saveConfig(this.configForm.getValue());
+    } finally {
+      this.isSaving = false;
+    }
   }
 
   render() {
@@ -62,25 +55,20 @@ export default class EngineConfig extends RedGin {
         <div class="field">
           <label for="apiKey">OpenAI API Key</label>
           <input 
-            type="password" 
-            id="apiKey" 
-            class="input-standard" 
-            placeholder="sk-..." 
+            type="password" id="apiKey" class="input-standard" 
             value="${this.global.config.apiKey}"
             ${on('input', (e: any) => this.configForm.setValue({ "apiKey": e.target.value }))}
           >
-          <div id="apiKeyError" class="error-text"></div>
         </div>
 
         <div class="field">
           <label for="model">Inference Model</label>
           <select 
-            id="model" 
-            class="input-standard"
+            id="model" class="input-standard"
             ${on('change', (e: any) => this.configForm.setValue({ "model": e.target.value }))}
           >
-            <option value="gpt-4o">GPT-4o</option>
-            <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+            <option value="gpt-4o" ?selected="${this.global.config.model === 'gpt-4o'}">GPT-4o</option>
+            <option value="claude-3-5-sonnet" ?selected="${this.global.config.model === 'claude-3-5-sonnet'}">Claude 3.5 Sonnet</option>
           </select>
         </div>
 
@@ -88,8 +76,8 @@ export default class EngineConfig extends RedGin {
           <button 
             type="button"
             class="btn-primary ${this.isSaving ? 'processing' : ''}"
-            ${on('click', () => this.handleSave())}
-            ${!this.isValid || this.isSaving ? 'disabled' : ''}
+            ?disabled="${!this.isValid || this.isSaving}"
+            ${on('click', this.handleSave)}
           >
             ${this.isSaving 
               ? html`<div class="spinner spinner-white"></div> <span>Syncing...</span>` 
@@ -100,5 +88,4 @@ export default class EngineConfig extends RedGin {
     `;
   }
 }
-
 customElements.define('app-config', EngineConfig);
