@@ -1,4 +1,4 @@
-import { RedGin, html, on, getset, s, watch } from "scalpeljs";
+import { RedGin, html, on, getset, s, watch, attr } from "scalpeljs";
 import { store, actions, selectors } from "../store";
 
 export default class Playground extends RedGin {
@@ -41,12 +41,11 @@ export default class Playground extends RedGin {
           </div>
 
           <div class="input-container">
-            ${watch(["global"], () => html`
               <input class="input-standard" type="text" 
-                placeholder="${this.isProcessing ? 'AI is processing...' : 'Type a query...'}" 
-                ?disabled="${this.isProcessing}"
-                ${on('keyup', this.handleSend)}>
-            `)}
+                ${attr('placeholder', () => this.isProcessing ? 'AI is processing...' : 'Type a query...')}
+                ${attr('disabled', () => this.isProcessing)}
+                ${on('keyup', this.handleSend)}
+              />
           </div>
         </section>
         
