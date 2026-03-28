@@ -1,0 +1,3 @@
+# Treat this specific file as CSS for syntax highlighting on GitHub
+templates/ts/rag_studio/src/theme.css.ts linguist-language=css
+
