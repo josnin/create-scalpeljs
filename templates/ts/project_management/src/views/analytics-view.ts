@@ -2,6 +2,7 @@ import { RedGin, html, getset, s, on, css } from "scalpeljs";
 import { store } from "../store";
 
 const styles = css`
+  /* <styles> */
   .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
   .stat-card { text-align: center; }
   .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
@@ -10,6 +11,7 @@ const styles = css`
   .progress-header { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.25rem; }
   .progress-bar-bg { background: var(--gray-100); border-radius: 9999px; height: 0.5rem; }
   .progress-bar-fill { background: var(--primary); height: 100%; border-radius: 9999px; }
+  /* </styles> */
 `;
 
 export default class AnalyticsView extends RedGin {
