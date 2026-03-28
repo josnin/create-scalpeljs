@@ -1,9 +1,24 @@
-import { RedGin, html, on, getset, s, FormBuilder, propReflect } from "scalpeljs";
-import { store, actions, selectors } from "../store";
+import {
+  RedGin,
+  html,
+  on,
+  getset,
+  s,
+  FormBuilder,
+  propReflect,
+  attr,
+} from 'scalpeljs';
+import { store, actions, selectors } from '../store';
 
 const VALIDATORS = {
-  required: { validator: (v: any) => !!v?.toString().trim(), errorMessage: 'Required.' },
-  apiKey: { validator: (v: string) => v.startsWith('sk-'), errorMessage: 'Must start with sk-...' }
+  required: {
+    validator: (v: any) => !!v?.toString().trim(),
+    errorMessage: 'Required.',
+  },
+  apiKey: {
+    validator: (v: string) => v.startsWith('sk-'),
+    errorMessage: 'Must start with sk-...',
+  },
 };
 
 export default class EngineConfig extends RedGin {
@@ -18,15 +33,18 @@ export default class EngineConfig extends RedGin {
   private configForm!: ReturnType<FormBuilder['group']>;
 
   onInit() {
-    this._unsub = store.subscribe(state => (this.global = { ...state }));
+    this._unsub = store.subscribe((state) => (this.global = { ...state }));
     this.setupForm();
   }
 
   private setupForm() {
     this.fb = new FormBuilder(this.shadowRoot!);
     this.configForm = this.fb.group({
-      apiKey: this.fb.control(this.global.config.apiKey, [VALIDATORS.required, VALIDATORS.apiKey]),
-      model: this.fb.control(this.global.config.model, [VALIDATORS.required])
+      apiKey: this.fb.control(this.global.config.apiKey, [
+        VALIDATORS.required,
+        VALIDATORS.apiKey,
+      ]),
+      model: this.fb.control(this.global.config.model, [VALIDATORS.required]),
     });
 
     this.configForm.subscribe(() => {
@@ -36,7 +54,10 @@ export default class EngineConfig extends RedGin {
     });
   }
 
-  disconnectedCallback() { this._unsub?.(); super.disconnectedCallback(); }
+  disconnectedCallback() {
+    this._unsub?.();
+    super.disconnectedCallback();
+  }
 
   handleSave = async () => {
     this.isSaving = true;
@@ -46,10 +67,9 @@ export default class EngineConfig extends RedGin {
     } finally {
       this.isSaving = false;
     }
-  }
+  };
 
   render() {
-
     return html`
       <div class="card">
         <h2 style="font-size: 2.2rem; font-weight: 850; letter-spacing: -1.5px; margin: 0 0 2rem;">Engine Config.</h2>
@@ -72,22 +92,24 @@ export default class EngineConfig extends RedGin {
            <div id="modelError"></div>
         </div>
 
-        ${s(() => html`
           <button 
             type="button"
-            class="btn-primary ${this.isSaving ? 'processing' : ''}"
-            ${!this.isValid || this.isSaving ? `disabled` : ''  }"
+            ${attr(
+              'class',
+              () => `btn-primary ${this.isSaving ? 'processing' : ''}`
+            )}
+            ${attr('disabled', () => !this.isValid || this.isSaving)}
             ${on('click', this.handleSave)}
           >
-            ${this.isSaving 
-              ? html`<div class="spinner"></div> <span>Syncing...</span>` 
-              : 'Save Configuration'}
+
+          ${s(() =>
+            this.isSaving
+              ? html`<div class="spinner"></div> <span>Syncing...</span>`
+              : 'Save Configuration'
+          )}
           </button>
-        `)}
       </div>
     `;
   }
-
-
 }
 customElements.define('app-config', EngineConfig);
