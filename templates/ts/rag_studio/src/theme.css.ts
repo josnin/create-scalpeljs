@@ -1,6 +1,6 @@
 import { css } from "scalpeljs";
 
-export const theme = css/* css */`
+export const theme = css`
   :host { 
     --primary: #0071e3;
     --accent: #5e5ce6;
