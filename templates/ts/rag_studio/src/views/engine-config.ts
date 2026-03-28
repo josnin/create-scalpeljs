@@ -5,10 +5,9 @@ import {
   getset,
   s,
   FormBuilder,
-  propReflect,
   attr,
 } from 'scalpeljs';
-import { store, actions, selectors } from '../store';
+import { store, actions } from '../store';
 
 const VALIDATORS = {
   required: {
@@ -23,10 +22,10 @@ const VALIDATORS = {
 
 export default class EngineConfig extends RedGin {
   global = getset(store.state);
-  isValid = propReflect<boolean>(false);
+  isValid = getset<boolean>(false);
   isSaving = getset<boolean>(false);
 
-  static observedAttributes = ['is-valid'];
+  //static observedAttributes = ['is-valid'];
 
   private _unsub?: () => void;
   private fb!: FormBuilder;
