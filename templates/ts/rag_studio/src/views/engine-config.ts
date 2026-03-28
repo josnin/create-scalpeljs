@@ -32,6 +32,7 @@ export default class EngineConfig extends RedGin {
     this.configForm.subscribe(() => {
       this.configForm.validateAll();
       this.isValid = this.configForm.valid;
+      //console.log(this.configForm.getValue())
     });
   }
 
@@ -48,8 +49,6 @@ export default class EngineConfig extends RedGin {
   }
 
   render() {
-    // Get official view of config via Selector
-    const config = selectors.getConfig();
 
     return html`
       <div class="card">
@@ -60,27 +59,24 @@ export default class EngineConfig extends RedGin {
           <input 
             type="password" id="apiKey" class="input-standard" 
             placeholder="sk-..."
-            value="${config.apiKey}"
-            ${on('input', (e: any) => this.configForm.setValue({ "apiKey": e.target.value }))}
           >
+           <div id="apiKeyError"></div>
         </div>
 
         <div class="field">
           <label for="model">Inference Model</label>
-          <select 
-            id="model" class="input-standard"
-            ${on('change', (e: any) => this.configForm.setValue({ "model": e.target.value }))}
-          >
-            <option value="gpt-4o" selected="${config.model === 'gpt-4o'}">GPT-4o</option>
-            <option value="claude-3-5-sonnet" selected="${config.model === 'claude-3-5-sonnet'}">Claude 3.5 Sonnet</option>
+          <select id="model" class="input-standard">
+            <option value="gpt-4o">GPT-4o</option>
+            <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
           </select>
+           <div id="modelError"></div>
         </div>
 
         ${s(() => html`
           <button 
             type="button"
             class="btn-primary ${this.isSaving ? 'processing' : ''}"
-            ?disabled="${!this.isValid || this.isSaving}"
+            ${!this.isValid || this.isSaving ? `disabled` : ''  }"
             ${on('click', this.handleSave)}
           >
             ${this.isSaving 

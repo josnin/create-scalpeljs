@@ -85,4 +85,26 @@ export const theme = css`
   }
 
   .source-card { background: rgba(255,255,255,0.03); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 0.8rem; border: 1px solid var(--border); font-size: 0.85rem; }
+
+    /* Spinner Animation */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #000; /* Matches the black text on your white button */
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+
+  /* Optional: Pulse effect when loading */
+  .btn-primary.loading {
+    background: rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+  }
+
 `;
